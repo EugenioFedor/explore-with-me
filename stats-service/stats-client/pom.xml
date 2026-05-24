@@ -6,24 +6,17 @@
 
     <parent>
         <groupId>ru.practicum</groupId>
-        <artifactId>explore-with-me</artifactId>
+        <artifactId>stats-service</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <packaging>pom</packaging>
-
-    <artifactId>stats-service</artifactId>
-
-    <modules>
-        <module>stats-dto</module>
-        <module>stats-server</module>
-        <module>stats-client</module>
-    </modules>
+    <artifactId>stats-client</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>ru.practicum</groupId>
+            <artifactId>stats-dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
