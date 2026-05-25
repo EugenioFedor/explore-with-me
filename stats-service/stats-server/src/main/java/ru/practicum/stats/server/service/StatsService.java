@@ -2,6 +2,7 @@ package ru.practicum.stats.server.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.stats.server.dto.StatsRequestDto;
 import ru.practicum.stats.server.mapper.EndpointHitMapper;
 import ru.practicum.stats.server.model.EndpointHit;
 import ru.practicum.stats.server.repository.StatsRepository;
@@ -24,7 +25,9 @@ public class StatsService {
         statsRepository.save(endpointHit);
     }
 
-    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        return unique ? statsRepository.findUniqueStats(start, end, uris) : statsRepository.findStats(start, end, uris);
+    public List<ViewStatsDto> getStats(StatsRequestDto request) {
+        return request.getUnique()
+                ? statsRepository.findUniqueStats(request.getStart(), request.getEnd(), request.getUris())
+                : statsRepository.findStats(request.getStart(), request.getEnd(), request.getUris());
     }
 }
