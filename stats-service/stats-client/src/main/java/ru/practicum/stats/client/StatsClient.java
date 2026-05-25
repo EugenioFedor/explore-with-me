@@ -17,7 +17,8 @@ public class StatsClient {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final ParameterizedTypeReference<List<ViewStatsDto>> STATS_LIST =
-            new ParameterizedTypeReference<>() {};
+            new ParameterizedTypeReference<>() {
+            };
 
     private final RestClient rest;
 
