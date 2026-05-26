@@ -1,14 +1,38 @@
 services:
   stats-server:
+    build: ./stats-service/stats-server
     ports:
       - "9090:9090"
+    depends_on:
+      stats-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: stats-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: stats
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
 
   stats-db:
-    image: postgres:16.1
+    image: postgres:17
+    ports:
+      - "6541:5432"
+    environment:
+      POSTGRES_DB: stats
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - stats-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d stats" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   ewm-service:
+    build: ./ewm-service
     ports:
       - "8080:8080"
 
-  ewm-db:
-    image: postgres:16.1
+volumes:
+  stats-db-data:
