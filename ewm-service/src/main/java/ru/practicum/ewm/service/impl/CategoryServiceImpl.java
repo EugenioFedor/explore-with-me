@@ -41,8 +41,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
 
-        boolean hasEvents = eventRepository.findAll().stream()
-                .anyMatch(event -> event.getCategory().getId().equals(catId));
+        boolean hasEvents = eventRepository.existsByCategoryId(catId);
         if (hasEvents) {
             throw new ConflictException("The category is not empty");
         }
