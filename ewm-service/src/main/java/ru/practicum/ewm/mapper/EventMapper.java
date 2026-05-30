@@ -2,6 +2,7 @@ package ru.practicum.ewm.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.model.Event;
 
@@ -9,4 +10,6 @@ import ru.practicum.ewm.model.Event;
 public interface EventMapper {
 
     EventShortDto toShortDto(Event event);
+
+    EventFullDto toFullDto(Event event);
 }
