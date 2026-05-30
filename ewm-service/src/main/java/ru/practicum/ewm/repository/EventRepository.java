@@ -11,7 +11,6 @@ import ru.practicum.ewm.model.EventState;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
