@@ -61,6 +61,10 @@ public class StatsService {
         }
     }
 
+    public long getViews(Event event) {
+        return getViews(List.of(event)).getOrDefault(event.getId(), 0L);
+    }
+
     public void hit(HttpServletRequest request) {
         try {
             statsClient.hit(new EndpointHitDto(
