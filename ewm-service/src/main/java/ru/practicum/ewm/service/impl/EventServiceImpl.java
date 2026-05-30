@@ -153,7 +153,7 @@ public class EventServiceImpl implements EventService {
         if (newEventDto.getEventDate()
                 .isBefore(LocalDateTime.now().plusHours(MIN_HOURS_BEFORE_EVENT))) {
 
-            throw new ConflictException(
+            throw new IllegalArgumentException(
                     "Field: eventDate. Error: должно содержать дату, которая еще не наступила."
             );
         }
@@ -198,6 +198,13 @@ public class EventServiceImpl implements EventService {
         if (event.getState() == EventState.PUBLISHED) {
             throw new ConflictException(
                     "Only pending or canceled events can be changed"
+            );
+        }
+
+        if (updateRequest.getEventDate() != null
+                && updateRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(MIN_HOURS_BEFORE_EVENT))) {
+            throw new IllegalArgumentException(
+                    "Field: eventDate. Error: должно содержать дату, которая еще не наступила."
             );
         }
 
@@ -290,6 +297,13 @@ public class EventServiceImpl implements EventService {
         }
         if (updateRequest.getEventDate() != null) {
             event.setEventDate(updateRequest.getEventDate());
+        }
+
+        if (updateRequest.getEventDate() != null
+                && updateRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(MIN_HOURS_BEFORE_EVENT))) {
+            throw new IllegalArgumentException(
+                    "Field: eventDate. Error: должно содержать дату, которая еще не наступила."
+            );
         }
 
         if (updateRequest.getStateAction() != null) {
