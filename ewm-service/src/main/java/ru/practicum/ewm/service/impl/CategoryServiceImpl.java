@@ -3,6 +3,7 @@ package ru.practicum.ewm.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.dto.NewCategoryDto;
@@ -13,6 +14,8 @@ import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.repository.CategoryRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.service.CategoryService;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -60,6 +63,24 @@ public class CategoryServiceImpl implements CategoryService {
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("Category with name " + categoryDto.getName() + " already exists");
         }
+        return categoryMapper.toDto(category);
+    }
+
+    @Override
+    public List<CategoryDto> getCategories(int from, int size) {
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+
+        return categoryRepository.findAll(pageRequest)
+                .stream()
+                .map(categoryMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public CategoryDto getCategory(Long catId) {
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
+
         return categoryMapper.toDto(category);
     }
 }

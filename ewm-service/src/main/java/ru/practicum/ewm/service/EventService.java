@@ -1,15 +1,25 @@
 package ru.practicum.ewm.service;
 
-import ru.practicum.ewm.dto.EventFullDto;
-import ru.practicum.ewm.dto.EventShortDto;
-import ru.practicum.ewm.dto.NewEventDto;
-import ru.practicum.ewm.dto.UpdateEventAdminRequest;
-import ru.practicum.ewm.dto.UpdateEventUserRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import ru.practicum.ewm.dto.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
+
+    List<EventShortDto> getPublicEvents(
+            String text,
+            List<Long> categories,
+            Boolean paid,
+            String rangeStart,
+            String rangeEnd,
+            Boolean onlyAvailable,
+            String sort,
+            int from,
+            int size,
+            HttpServletRequest request
+    );
 
     List<EventShortDto> getUserEvents(Long userId, int from, int size);
 
@@ -26,6 +36,8 @@ public interface EventService {
                                            LocalDateTime rangeEnd,
                                            int from,
                                            int size);
+
+    EventFullDto getPublicEvent(Long eventId, HttpServletRequest request);
 
     EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest);
 }

@@ -3,6 +3,7 @@ package ru.practicum.ewm.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
@@ -93,5 +94,26 @@ public class CompilationServiceImpl implements CompilationService {
                     .toList());
         }
         return dto;
+    }
+
+    @Override
+    public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+
+        List<Compilation> compilations = pinned == null
+                ? compilationRepository.findAll(pageRequest).getContent()
+                : compilationRepository.findAllByPinned(pinned, pageRequest).getContent();
+
+        return compilations.stream()
+                .map(compilationMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public CompilationDto getCompilation(Long compId) {
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
+
+        return compilationMapper.toDto(compilation);
     }
 }
