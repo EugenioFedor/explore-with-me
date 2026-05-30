@@ -6,15 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LocationDto {
+public class EventRequestStatusUpdateRequest {
 
     @NotNull
-    private Float lat;
+    private List<Long> requestIds;
 
     @NotNull
-    private Float lon;
+    private RequestStatusAction status;
 }

@@ -8,11 +8,8 @@ import ru.practicum.stats.client.StatsClient;
 @Configuration
 public class StatsClientConfig {
 
-    @Value("${stats-server.url}")
-    private String serverUrl;
-
     @Bean
-    public StatsClient statsClient() {
-        return new StatsClient(serverUrl);
+    public StatsClient statsClient(@Value("${stats-server.url:http://localhost:9090}") String baseUrl) {
+        return new StatsClient(baseUrl);
     }
 }
