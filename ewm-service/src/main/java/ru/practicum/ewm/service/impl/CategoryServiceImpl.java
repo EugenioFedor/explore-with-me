@@ -13,6 +13,8 @@ import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.repository.CategoryRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.service.CategoryService;
+import org.springframework.data.domain.PageRequest;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -60,6 +62,24 @@ public class CategoryServiceImpl implements CategoryService {
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("Category with name " + categoryDto.getName() + " already exists");
         }
+        return categoryMapper.toDto(category);
+    }
+
+    @Override
+    public List<CategoryDto> getCategories(int from, int size) {
+        PageRequest pageRequest = PageRequest.of(from / size, size);
+
+        return categoryRepository.findAll(pageRequest)
+                .stream()
+                .map(categoryMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public CategoryDto getCategory(Long catId) {
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
+
         return categoryMapper.toDto(category);
     }
 }
