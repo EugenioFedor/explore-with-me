@@ -24,10 +24,12 @@ import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.EventService;
+import ru.practicum.ewm.service.StatsService;
 import ru.practicum.ewm.specification.EventSpecification;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -41,14 +43,17 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final RequestRepository requestRepository;
     private final EventMapper eventMapper;
+    private final StatsService statsService;
 
     @Override
     public List<EventShortDto> getUserEvents(Long userId, int from, int size) {
         log.info("Getting events for user id={}, from={}, size={}", userId, from, size);
         checkUserExists(userId);
         Pageable pageable = PageRequest.of(from / size, size);
-        return eventRepository.findByInitiatorId(userId, pageable).stream()
-                .map(this::toShortDto)
+        List<Event> events = eventRepository.findByInitiatorId(userId, pageable).getContent();
+        Map<Long, Long> views = statsService.getViews(events);
+        return events.stream()
+                .map(event -> toShortDto(event, views.getOrDefault(event.getId(), 0L)))
                 .toList();
     }
 
@@ -155,8 +160,10 @@ public class EventServiceImpl implements EventService {
         Pageable pageable = PageRequest.of(from / size, size);
         Specification<Event> spec = EventSpecification.adminFilter(users, eventStates, categories,
                 rangeStart, rangeEnd);
-        return eventRepository.findAll(spec, pageable).stream()
-                .map(this::toFullDto)
+        List<Event> events = eventRepository.findAll(spec, pageable).getContent();
+        Map<Long, Long> views = statsService.getViews(events);
+        return events.stream()
+                .map(event -> toFullDto(event, views.getOrDefault(event.getId(), 0L)))
                 .toList();
     }
 
@@ -228,16 +235,20 @@ public class EventServiceImpl implements EventService {
     }
 
     private EventFullDto toFullDto(Event event) {
+        return toFullDto(event, statsService.getViews(event));
+    }
+
+    private EventFullDto toFullDto(Event event, long views) {
         EventFullDto dto = eventMapper.toFullDto(event);
         dto.setConfirmedRequests(requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED));
-        dto.setViews(0L);
+        dto.setViews(views);
         return dto;
     }
 
-    private EventShortDto toShortDto(Event event) {
+    private EventShortDto toShortDto(Event event, long views) {
         EventShortDto dto = eventMapper.toShortDto(event);
         dto.setConfirmedRequests(requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED));
-        dto.setViews(0L);
+        dto.setViews(views);
         return dto;
     }
 
