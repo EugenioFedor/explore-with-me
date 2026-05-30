@@ -192,6 +192,21 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() ->
                         new NotFoundException("Event with id=" + eventId + " was not found"));
 
+        if (event.getState() == EventState.PUBLISHED) {
+            throw new ConflictException(
+                    "Only pending or canceled events can be changed"
+            );
+        }
+
+        if (updateRequest.getStateAction() != null) {
+            switch (updateRequest.getStateAction()) {
+                case SEND_TO_REVIEW -> event.setState(EventState.PENDING);
+                case CANCEL_REVIEW -> event.setState(EventState.CANCELED);
+            }
+        }
+
+        event = eventRepository.save(event);
+
         return toFullDto(event);
     }
 
@@ -241,15 +256,58 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateEventByAdmin(
-            Long eventId,
-            UpdateEventAdminRequest updateRequest
-    ) {
-
+    public EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() ->
-                        new NotFoundException("Event with id=" + eventId + " was not found"));
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
 
+        if (updateRequest.getAnnotation() != null) {
+            event.setAnnotation(updateRequest.getAnnotation());
+        }
+        if (updateRequest.getDescription() != null) {
+            event.setDescription(updateRequest.getDescription());
+        }
+        if (updateRequest.getTitle() != null) {
+            event.setTitle(updateRequest.getTitle());
+        }
+        if (updateRequest.getCategory() != null) {
+            event.setCategory(getCategory(updateRequest.getCategory()));
+        }
+        if (updateRequest.getPaid() != null) {
+            event.setPaid(updateRequest.getPaid());
+        }
+        if (updateRequest.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateRequest.getParticipantLimit());
+        }
+        if (updateRequest.getRequestModeration() != null) {
+            event.setRequestModeration(updateRequest.getRequestModeration());
+        }
+        if (updateRequest.getLocation() != null) {
+            event.getLocation().setLat(updateRequest.getLocation().getLat());
+            event.getLocation().setLon(updateRequest.getLocation().getLon());
+        }
+        if (updateRequest.getEventDate() != null) {
+            event.setEventDate(updateRequest.getEventDate());
+        }
+
+        if (updateRequest.getStateAction() != null) {
+            switch (updateRequest.getStateAction()) {
+                case PUBLISH_EVENT -> {
+                    if (event.getState() != EventState.PENDING) {
+                        throw new ConflictException("Cannot publish the event because it's not in the right state: " + event.getState());
+                    }
+                    event.setState(EventState.PUBLISHED);
+                    event.setPublishedOn(LocalDateTime.now());
+                }
+                case REJECT_EVENT -> {
+                    if (event.getState() == EventState.PUBLISHED) {
+                        throw new ConflictException("Cannot reject the event because it's not in the right state: " + event.getState());
+                    }
+                    event.setState(EventState.CANCELED);
+                }
+            }
+        }
+
+        event = eventRepository.save(event);
         return toFullDto(event);
     }
 
