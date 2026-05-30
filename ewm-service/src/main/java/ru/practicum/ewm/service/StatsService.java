@@ -24,43 +24,53 @@ public class StatsService {
     private final StatsClient statsClient;
 
     public Map<Long, Long> getViews(Collection<Event> events) {
-        if (events.isEmpty()) {
+        if (events == null || events.isEmpty()) {
             return Map.of();
         }
 
-        List<String> uris = events.stream()
-                .map(event -> URI_PREFIX + event.getId())
-                .toList();
+        try {
+            List<String> uris = events.stream()
+                    .map(event -> URI_PREFIX + event.getId())
+                    .toList();
 
-        LocalDateTime start = events.stream()
-                .map(Event::getCreatedOn)
-                .filter(Objects::nonNull)
-                .min(LocalDateTime::compareTo)
-                .orElse(DEFAULT_START);
+            LocalDateTime start = events.stream()
+                    .map(Event::getCreatedOn)
+                    .filter(Objects::nonNull)
+                    .min(LocalDateTime::compareTo)
+                    .orElse(DEFAULT_START);
 
-        List<ViewStatsDto> stats = statsClient.getStats(start, LocalDateTime.now(), uris, true);
+            List<ViewStatsDto> stats = statsClient.getStats(start, LocalDateTime.now(), uris, true);
 
-        Map<String, Long> hitsByUri = stats.stream()
-                .collect(Collectors.toMap(ViewStatsDto::uri, ViewStatsDto::hits, (first, second) -> first));
+            Map<String, Long> hitsByUri = stats.stream()
+                    .collect(Collectors.toMap(ViewStatsDto::uri, ViewStatsDto::hits, (first, second) -> first));
 
-        return events.stream()
-                .collect(Collectors.toMap(
-                        Event::getId,
-                        event -> hitsByUri.getOrDefault(URI_PREFIX + event.getId(), 0L),
-                        (first, second) -> first,
-                        HashMap::new));
-    }
-
-    public long getViews(Event event) {
-        return getViews(List.of(event)).getOrDefault(event.getId(), 0L);
+            return events.stream()
+                    .collect(Collectors.toMap(
+                            Event::getId,
+                            event -> hitsByUri.getOrDefault(URI_PREFIX + event.getId(), 0L),
+                            (first, second) -> first,
+                            HashMap::new));
+        } catch (Exception e) {
+            log.warn("Cannot get stats views", e);
+            return events.stream()
+                    .collect(Collectors.toMap(
+                            Event::getId,
+                            event -> 0L,
+                            (first, second) -> first,
+                            HashMap::new));
+        }
     }
 
     public void hit(HttpServletRequest request) {
-        statsClient.hit(new EndpointHitDto(
-                APP_NAME,
-                request.getRequestURI(),
-                request.getRemoteAddr(),
-                LocalDateTime.now()
-        ));
+        try {
+            statsClient.hit(new EndpointHitDto(
+                    APP_NAME,
+                    request.getRequestURI(),
+                    request.getRemoteAddr(),
+                    LocalDateTime.now()
+            ));
+        } catch (Exception e) {
+            log.warn("Cannot save stats hit for uri={}", request.getRequestURI(), e);
+        }
     }
 }
