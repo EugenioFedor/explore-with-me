@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.dto.NewEventDto;
+import ru.practicum.ewm.dto.UpdateEventAdminRequest;
 import ru.practicum.ewm.dto.UpdateEventUserRequest;
 import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
@@ -22,6 +24,7 @@ import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.EventService;
+import ru.practicum.ewm.specification.EventSpecification;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -133,6 +136,94 @@ public class EventServiceImpl implements EventService {
                 case SEND_TO_REVIEW -> event.setState(EventState.PENDING);
                 case CANCEL_REVIEW -> event.setState(EventState.CANCELED);
             }
+        }
+    }
+
+    @Override
+    public List<EventFullDto> searchEventsByAdmin(List<Long> users,
+                                                  List<String> states,
+                                                  List<Long> categories,
+                                                  LocalDateTime rangeStart,
+                                                  LocalDateTime rangeEnd,
+                                                  int from,
+                                                  int size) {
+        log.info("Admin searching events: users={}, states={}, categories={}", users, states, categories);
+        List<EventState> eventStates = null;
+        if (states != null) {
+            eventStates = states.stream().map(EventState::valueOf).toList();
+        }
+        Pageable pageable = PageRequest.of(from / size, size);
+        Specification<Event> spec = EventSpecification.adminFilter(users, eventStates, categories,
+                rangeStart, rangeEnd);
+        return eventRepository.findAll(spec, pageable).stream()
+                .map(this::toFullDto)
+                .toList();
+    }
+
+    @Override
+    public EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest) {
+        log.info("Admin updating event id={}", eventId);
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
+
+        if (updateRequest.getEventDate() != null) {
+            if (updateRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(MIN_HOURS_BEFORE_EVENT))) {
+                throw new ConflictException("Field: eventDate. Error: должно содержать дату, которая еще не наступила. "
+                        + "Value: " + updateRequest.getEventDate());
+            }
+            event.setEventDate(updateRequest.getEventDate());
+        }
+
+        if (updateRequest.getStateAction() != null) {
+            switch (updateRequest.getStateAction()) {
+                case PUBLISH_EVENT -> {
+                    if (event.getState() != EventState.PENDING) {
+                        throw new ConflictException("Cannot publish the event because it's not in the right state: "
+                                + event.getState());
+                    }
+                    event.setState(EventState.PUBLISHED);
+                    event.setPublishedOn(LocalDateTime.now());
+                }
+                case REJECT_EVENT -> {
+                    if (event.getState() == EventState.PUBLISHED) {
+                        throw new ConflictException("Cannot reject the event because it's not in the right state: "
+                                + event.getState());
+                    }
+                    event.setState(EventState.CANCELED);
+                }
+            }
+        }
+
+        applyAdminUpdates(event, updateRequest);
+        event = eventRepository.save(event);
+        return toFullDto(event);
+    }
+
+    private void applyAdminUpdates(Event event, UpdateEventAdminRequest updateRequest) {
+        if (updateRequest.getAnnotation() != null) {
+            event.setAnnotation(updateRequest.getAnnotation());
+        }
+        if (updateRequest.getDescription() != null) {
+            event.setDescription(updateRequest.getDescription());
+        }
+        if (updateRequest.getTitle() != null) {
+            event.setTitle(updateRequest.getTitle());
+        }
+        if (updateRequest.getCategory() != null) {
+            event.setCategory(getCategory(updateRequest.getCategory()));
+        }
+        if (updateRequest.getPaid() != null) {
+            event.setPaid(updateRequest.getPaid());
+        }
+        if (updateRequest.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateRequest.getParticipantLimit());
+        }
+        if (updateRequest.getRequestModeration() != null) {
+            event.setRequestModeration(updateRequest.getRequestModeration());
+        }
+        if (updateRequest.getLocation() != null) {
+            event.getLocation().setLat(updateRequest.getLocation().getLat());
+            event.getLocation().setLon(updateRequest.getLocation().getLon());
         }
     }
 
