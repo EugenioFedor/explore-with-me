@@ -240,6 +240,19 @@ public class EventServiceImpl implements EventService {
                 .toList();
     }
 
+    @Override
+    public EventFullDto updateEventByAdmin(
+            Long eventId,
+            UpdateEventAdminRequest updateRequest
+    ) {
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() ->
+                        new NotFoundException("Event with id=" + eventId + " was not found"));
+
+        return toFullDto(event);
+    }
+
     private EventShortDto toShortDto(Event event, long views) {
 
         EventShortDto dto = eventMapper.toShortDto(event);
