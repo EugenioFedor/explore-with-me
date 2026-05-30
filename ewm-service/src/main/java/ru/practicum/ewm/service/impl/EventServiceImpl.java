@@ -92,6 +92,7 @@ public class EventServiceImpl implements EventService {
         }
 
         Map<Long, Long> views = statsService.getViews(events);
+        statsService.hit(request);
 
         List<EventShortDto> result = events.stream()
                 .map(event -> toShortDto(
@@ -119,6 +120,8 @@ public class EventServiceImpl implements EventService {
         if (event.getState() != EventState.PUBLISHED) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
         }
+
+        statsService.hit(request);
 
         return toFullDto(event);
     }

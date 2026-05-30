@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.model.Event;
 import ru.practicum.stats.client.StatsClient;
 import ru.practicum.stats.dto.ViewStatsDto;
+import jakarta.servlet.http.HttpServletRequest;
+import ru.practicum.stats.dto.EndpointHitDto;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -18,7 +20,7 @@ public class StatsService {
 
     private static final String URI_PREFIX = "/events/";
     private static final LocalDateTime DEFAULT_START = LocalDateTime.of(2000, 1, 1, 0, 0, 0);
-
+    private static final String APP_NAME = "ewm-main-service";
     private final StatsClient statsClient;
 
     public Map<Long, Long> getViews(Collection<Event> events) {
@@ -51,5 +53,14 @@ public class StatsService {
 
     public long getViews(Event event) {
         return getViews(List.of(event)).getOrDefault(event.getId(), 0L);
+    }
+
+    public void hit(HttpServletRequest request) {
+        statsClient.hit(new EndpointHitDto(
+                APP_NAME,
+                request.getRequestURI(),
+                request.getRemoteAddr(),
+                LocalDateTime.now()
+        ));
     }
 }
