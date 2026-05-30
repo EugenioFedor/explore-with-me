@@ -56,7 +56,7 @@ public class RequestServiceImpl implements RequestService {
         }
 
         // Если премодерация выключена или лимит не задан — заявка сразу подтверждается
-        boolean autoConfirm = Boolean.FALSE.equals(event.getRequestModeration());
+        boolean autoConfirm = limit == 0 || Boolean.FALSE.equals(event.getRequestModeration());
 
         Request request = Request.builder()
                 .created(LocalDateTime.now())
