@@ -61,6 +61,12 @@ public class EventServiceImpl implements EventService {
         LocalDateTime start = parseDate(rangeStart);
         LocalDateTime end = parseDate(rangeEnd);
 
+        if (start != null && end != null && start.isAfter(end)) {
+            throw new IllegalArgumentException(
+                    "Field: rangeEnd. Error: rangeEnd должен быть позже rangeStart."
+            );
+        }
+
         if (start == null && end == null) {
             start = LocalDateTime.now();
         }
