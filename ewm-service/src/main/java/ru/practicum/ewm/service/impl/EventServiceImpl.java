@@ -71,15 +71,15 @@ public class EventServiceImpl implements EventService {
                 Sort.by(Sort.Direction.ASC, "eventDate")
         );
 
-        List<Event> events = eventRepository.findPublicEvents(
-                EventState.PUBLISHED,
+        Specification<Event> specification = EventSpecification.publicFilter(
                 normalizeText(text),
                 emptyToNull(categories),
                 paid,
                 start,
-                end,
-                pageable
-        ).getContent();
+                end
+        );
+
+        List<Event> events = eventRepository.findAll(specification, pageable).getContent();
 
         Map<Long, Long> confirmedRequests = getConfirmedRequests(events);
 
