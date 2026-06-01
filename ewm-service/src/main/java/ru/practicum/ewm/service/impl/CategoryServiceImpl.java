@@ -2,7 +2,6 @@ package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CategoryDto;
@@ -30,11 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
         log.info("Adding new category: {}", newCategoryDto.getName());
         Category category = categoryMapper.toEntity(newCategoryDto);
-        try {
-            category = categoryRepository.save(category);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException("Category with name " + newCategoryDto.getName() + " already exists");
-        }
+        category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }
 
@@ -58,18 +53,13 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
 
         category.setName(categoryDto.getName());
-        try {
-            category = categoryRepository.save(category);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException("Category with name " + categoryDto.getName() + " already exists");
-        }
+        category = categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }
 
     @Override
     public List<CategoryDto> getCategories(int from, int size) {
         PageRequest pageRequest = PageRequest.of(from / size, size);
-
         return categoryRepository.findAll(pageRequest)
                 .stream()
                 .map(categoryMapper::toDto)
@@ -80,7 +70,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto getCategory(Long catId) {
         Category category = categoryRepository.findById(catId)
                 .orElseThrow(() -> new NotFoundException("Category with id=" + catId + " was not found"));
-
         return categoryMapper.toDto(category);
     }
 }
