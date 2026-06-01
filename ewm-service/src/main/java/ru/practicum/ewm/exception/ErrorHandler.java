@@ -76,8 +76,8 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError handleThrowable(final Throwable e) {
-        log.error("500 {}", e.getMessage());
+    public ApiError handleAllExceptions(final Exception e) {
+        log.error("500 Internal Server Error: ", e);
         return ApiError.builder()
                 .errors(List.of(e.getClass().getSimpleName()))
                 .message(e.getMessage())
