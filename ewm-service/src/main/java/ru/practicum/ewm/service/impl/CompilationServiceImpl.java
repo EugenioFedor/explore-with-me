@@ -2,13 +2,11 @@ package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CompilationDto;
 import ru.practicum.ewm.dto.NewCompilationDto;
 import ru.practicum.ewm.dto.UpdateCompilationRequest;
-import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.CompilationMapper;
 import ru.practicum.ewm.mapper.EventMapper;
@@ -44,11 +42,7 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setEvents(new ArrayList<>());
         }
 
-        try {
-            compilation = compilationRepository.save(compilation);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException("Compilation with title " + newCompilationDto.getTitle() + " already exists");
-        }
+        compilation = compilationRepository.save(compilation);
         return toDtoWithEvents(compilation);
     }
 
@@ -78,11 +72,7 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setEvents(events);
         }
 
-        try {
-            compilation = compilationRepository.save(compilation);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException("Compilation with title " + updateRequest.getTitle() + " already exists");
-        }
+        compilation = compilationRepository.save(compilation);
         return toDtoWithEvents(compilation);
     }
 
@@ -105,7 +95,15 @@ public class CompilationServiceImpl implements CompilationService {
                 : compilationRepository.findAllByPinned(pinned, pageRequest).getContent();
 
         return compilations.stream()
-                .map(compilationMapper::toDto)
+                .map(compilation -> {
+                    CompilationDto dto = compilationMapper.toDto(compilation);
+                    if (compilation.getEvents() != null) {
+                        dto.setEvents(compilation.getEvents().stream()
+                                .map(eventMapper::toShortDto)
+                                .toList());
+                    }
+                    return dto;
+                })
                 .toList();
     }
 
@@ -114,6 +112,12 @@ public class CompilationServiceImpl implements CompilationService {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Compilation with id=" + compId + " was not found"));
 
-        return compilationMapper.toDto(compilation);
+        CompilationDto dto = compilationMapper.toDto(compilation);
+        if (compilation.getEvents() != null) {
+            dto.setEvents(compilation.getEvents().stream()
+                    .map(eventMapper::toShortDto)
+                    .toList());
+        }
+        return dto;
     }
 }
