@@ -3,23 +3,13 @@ package ru.practicum.ewm.service;
 import jakarta.servlet.http.HttpServletRequest;
 import ru.practicum.ewm.dto.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
 
-    List<EventShortDto> getPublicEvents(
-            String text,
-            List<Long> categories,
-            Boolean paid,
-            String rangeStart,
-            String rangeEnd,
-            Boolean onlyAvailable,
-            String sort,
-            int from,
-            int size,
-            HttpServletRequest request
-    );
+    List<EventShortDto> getPublicEvents(PublicEventSearchParams params);
+
+    EventFullDto getPublicEvent(Long eventId, HttpServletRequest request);
 
     List<EventShortDto> getUserEvents(Long userId, int from, int size);
 
@@ -29,15 +19,7 @@ public interface EventService {
 
     EventFullDto updateEventByUser(Long userId, Long eventId, UpdateEventUserRequest updateRequest);
 
-    List<EventFullDto> searchEventsByAdmin(List<Long> users,
-                                           List<String> states,
-                                           List<Long> categories,
-                                           LocalDateTime rangeStart,
-                                           LocalDateTime rangeEnd,
-                                           int from,
-                                           int size);
-
-    EventFullDto getPublicEvent(Long eventId, HttpServletRequest request);
+    List<EventFullDto> searchEventsByAdmin(AdminEventSearchParams params);
 
     EventFullDto updateEventByAdmin(Long eventId, UpdateEventAdminRequest updateRequest);
 }
