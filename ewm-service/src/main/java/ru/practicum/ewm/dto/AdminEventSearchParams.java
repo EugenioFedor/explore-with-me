@@ -17,10 +17,16 @@ public class AdminEventSearchParams {
     private List<Long> users;
     private List<String> states;
     private List<Long> categories;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rangeStart;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime rangeEnd;
-    private int from;
-    private int size;
+
+    @Builder.Default
+    private int from = 0;
+
+    @Builder.Default
+    private int size = 10;
 }
