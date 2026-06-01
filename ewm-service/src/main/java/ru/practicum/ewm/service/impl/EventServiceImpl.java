@@ -216,9 +216,12 @@ public class EventServiceImpl implements EventService {
                     .toList();
         }
 
+        int from = params.getFrom() < 0 ? 0 : params.getFrom();
+        int size = params.getSize() <= 0 ? 10 : params.getSize();
+
         Pageable pageable = PageRequest.of(
-                params.getFrom() / params.getSize(),
-                params.getSize(),
+                from / size,
+                size,
                 Sort.by(Sort.Direction.ASC, "eventDate")
         );
 
