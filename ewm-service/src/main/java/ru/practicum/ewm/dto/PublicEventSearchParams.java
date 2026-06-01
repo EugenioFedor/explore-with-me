@@ -20,7 +20,12 @@ public class PublicEventSearchParams {
     private String rangeEnd;
     private Boolean onlyAvailable;
     private String sort;
-    private int from;
-    private int size;
+
+    @Builder.Default
+    private int from = 0;
+
+    @Builder.Default
+    private int size = 10;
+
     private HttpServletRequest request;
 }
