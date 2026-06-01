@@ -2,12 +2,10 @@ package ru.practicum.ewm.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.NewUserRequest;
 import ru.practicum.ewm.dto.UserDto;
-import ru.practicum.ewm.exception.ConflictException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.mapper.UserMapper;
 import ru.practicum.ewm.model.User;
@@ -42,11 +40,7 @@ public class UserServiceImpl implements UserService {
     public UserDto registerUser(NewUserRequest newUserRequest) {
         log.info("Registering new user: {}", newUserRequest.getEmail());
         User user = userMapper.toEntity(newUserRequest);
-        try {
-            user = userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new ConflictException("User with email " + newUserRequest.getEmail() + " already exists");
-        }
+        user = userRepository.save(user);
         return userMapper.toDto(user);
     }
 
