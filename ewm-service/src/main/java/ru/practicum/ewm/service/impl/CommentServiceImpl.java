@@ -1,9 +1,11 @@
 package ru.practicum.ewm.service.impl;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.CommentDto;
 import ru.practicum.ewm.dto.NewCommentDto;
@@ -20,6 +22,7 @@ import ru.practicum.ewm.repository.CommentRepository;
 import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.CommentService;
+import ru.practicum.ewm.service.StatsHelperService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +36,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final CommentMapper commentMapper;
+    private final StatsHelperService statsHelperService;
 
     @Override
     public CommentDto addComment(Long userId, Long eventId, NewCommentDto newCommentDto) {
@@ -114,6 +118,39 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.save(comment);
     }
 
+    @Override
+    public List<CommentDto> getEventComments(Long eventId, int from, int size, HttpServletRequest request) {
+        checkEventExists(eventId);
+
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "created"));
+
+        List<CommentDto> comments = commentRepository
+                .findByEventIdAndStatus(eventId, CommentStatus.PUBLISHED, pageable)
+                .getContent()
+                .stream()
+                .map(commentMapper::toDto)
+                .toList();
+
+        statsHelperService.hit(request);
+
+        return comments;
+    }
+
+    @Override
+    public CommentDto getEventComment(Long eventId, Long commentId, HttpServletRequest request) {
+        Comment comment = commentRepository.findByIdAndEventId(commentId, eventId)
+                .orElseThrow(() ->
+                        new NotFoundException("Comment with id=" + commentId + " was not found"));
+
+        if (comment.getStatus() != CommentStatus.PUBLISHED) {
+            throw new NotFoundException("Comment with id=" + commentId + " was not found");
+        }
+
+        statsHelperService.hit(request);
+
+        return commentMapper.toDto(comment);
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() ->
@@ -129,6 +166,12 @@ public class CommentServiceImpl implements CommentService {
     private void checkUserExists(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("User with id=" + userId + " was not found");
+        }
+    }
+
+    private void checkEventExists(Long eventId) {
+        if (!eventRepository.existsById(eventId)) {
+            throw new NotFoundException("Event with id=" + eventId + " was not found");
         }
     }
 }
