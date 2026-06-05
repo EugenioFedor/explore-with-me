@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import ru.practicum.ewm.model.Comment;
 import ru.practicum.ewm.model.CommentStatus;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
