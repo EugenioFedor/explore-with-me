@@ -151,6 +151,76 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toDto(comment);
     }
 
+    @Override
+    public List<CommentDto> getAllComments(String status, int from, int size) {
+        // Если статус не указан — возвращаем комментарии всех статусов
+        CommentStatus commentStatus = parseStatus(status);
+
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "created"));
+
+        return commentRepository.findAllByStatus(commentStatus, pageable)
+                .getContent()
+                .stream()
+                .map(commentMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public CommentDto publishComment(Long commentId) {
+        Comment comment = getComment(commentId);
+
+        // Публиковать имеет смысл только комментарий, ожидающий модерации
+        if (comment.getStatus() != CommentStatus.PENDING) {
+            throw new ConflictException("Only comment with status PENDING can be published");
+        }
+
+        comment.setStatus(CommentStatus.PUBLISHED);
+        comment.setUpdated(LocalDateTime.now());
+
+        return commentMapper.toDto(commentRepository.save(comment));
+    }
+
+    @Override
+    public CommentDto rejectComment(Long commentId) {
+        Comment comment = getComment(commentId);
+
+        // Отклонить можно только комментарий, ожидающий модерации
+        if (comment.getStatus() != CommentStatus.PENDING) {
+            throw new ConflictException("Only comment with status PENDING can be rejected");
+        }
+
+        comment.setStatus(CommentStatus.REJECTED);
+        comment.setUpdated(LocalDateTime.now());
+
+        return commentMapper.toDto(commentRepository.save(comment));
+    }
+
+    @Override
+    public void deleteCommentByAdmin(Long commentId) {
+        // Администратор удаляет комментарий полностью из БД
+        if (!commentRepository.existsById(commentId)) {
+            throw new NotFoundException("Comment with id=" + commentId + " was not found");
+        }
+        commentRepository.deleteById(commentId);
+    }
+
+    private CommentStatus parseStatus(String status) {
+        if (status == null || status.isBlank()) {
+            return null;
+        }
+        try {
+            return CommentStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unknown comment status: " + status);
+        }
+    }
+
+    private Comment getComment(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() ->
+                        new NotFoundException("Comment with id=" + commentId + " was not found"));
+    }
+
     private User getUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() ->

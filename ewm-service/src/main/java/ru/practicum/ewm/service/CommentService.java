@@ -20,4 +20,14 @@ public interface CommentService {
     List<CommentDto> getEventComments(Long eventId, int from, int size, HttpServletRequest request);
 
     CommentDto getEventComment(Long eventId, Long commentId, HttpServletRequest request);
+
+    // Административные методы
+
+    List<CommentDto> getAllComments(String status, int from, int size);
+
+    CommentDto publishComment(Long commentId);
+
+    CommentDto rejectComment(Long commentId);
+
+    void deleteCommentByAdmin(Long commentId);
 }
