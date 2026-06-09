@@ -20,6 +20,8 @@ import ru.practicum.ewm.repository.UserRepository;
 import ru.practicum.ewm.service.EventService;
 import ru.practicum.ewm.service.StatsHelperService;
 import ru.practicum.ewm.specification.EventSpecification;
+import ru.practicum.ewm.repository.CommentRepository;
+import ru.practicum.ewm.model.CommentStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +45,7 @@ public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     private final EventMapper eventMapper;
     private final StatsHelperService statsHelperService;
+    private final CommentRepository commentRepository;
 
     @Override
     public List<EventShortDto> getPublicEvents(PublicEventSearchParams params) {
@@ -317,6 +320,13 @@ public class EventServiceImpl implements EventService {
 
         dto.setViews(views);
 
+        dto.setComments(
+                commentRepository.countByEventIdAndStatus(
+                        event.getId(),
+                        CommentStatus.PUBLISHED
+                )
+        );
+
         return dto;
     }
 
@@ -335,6 +345,13 @@ public class EventServiceImpl implements EventService {
         );
 
         dto.setViews(views);
+
+        dto.setComments(
+                commentRepository.countByEventIdAndStatus(
+                        event.getId(),
+                        CommentStatus.PUBLISHED
+                )
+        );
 
         return dto;
     }

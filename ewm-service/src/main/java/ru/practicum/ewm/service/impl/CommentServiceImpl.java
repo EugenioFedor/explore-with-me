@@ -154,7 +154,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> getAllComments(String status, int from, int size) {
         // Если статус не указан — возвращаем комментарии всех статусов
-        CommentStatus commentStatus = parseStatus(status);
+        CommentStatus commentStatus = CommentStatus.from(status);
 
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "created"));
 
@@ -202,17 +202,6 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException("Comment with id=" + commentId + " was not found");
         }
         commentRepository.deleteById(commentId);
-    }
-
-    private CommentStatus parseStatus(String status) {
-        if (status == null || status.isBlank()) {
-            return null;
-        }
-        try {
-            return CommentStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Unknown comment status: " + status);
-        }
     }
 
     private Comment getComment(Long commentId) {
