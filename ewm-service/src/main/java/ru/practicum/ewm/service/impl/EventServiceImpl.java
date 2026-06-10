@@ -376,6 +376,18 @@ public class EventServiceImpl implements EventService {
                 ));
     }
 
+    private Map<Long, Long> getCommentsCount(List<Event> events) {
+        if (events == null || events.isEmpty()) {
+            return Map.of();
+        }
+
+        List<Long> eventIds = events.stream()
+                .map(Event::getId)
+                .toList();
+
+        return commentRepository.countByEventIdsAndStatus(eventIds, CommentStatus.PUBLISHED);
+    }
+
     private boolean isAvailable(Event event, Long confirmedRequests) {
         Integer limit = event.getParticipantLimit();
         return limit == null
