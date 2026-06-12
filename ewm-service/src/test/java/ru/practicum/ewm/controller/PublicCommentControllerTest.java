@@ -1,5 +1,6 @@
 package ru.practicum.ewm.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,6 @@ import ru.practicum.ewm.controller.publicapi.PublicCommentController;
 import ru.practicum.ewm.dto.CommentDto;
 import ru.practicum.ewm.dto.UserShortDto;
 import ru.practicum.ewm.service.CommentService;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;

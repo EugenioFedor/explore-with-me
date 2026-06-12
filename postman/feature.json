@@ -31,12 +31,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Concerts {{$timestamp}}\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/admin/categories", "host": ["{{baseUrl}}"], "path": ["admin", "categories"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/categories",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "categories"
+              ]
+            }
           }
         },
         {
@@ -56,12 +70,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Event Author\",\n  \"email\": \"author{{$timestamp}}@example.com\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/admin/users", "host": ["{{baseUrl}}"], "path": ["admin", "users"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
           }
         },
         {
@@ -81,12 +109,26 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"name\": \"Comment Author\",\n  \"email\": \"commenter{{$timestamp}}@example.com\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/admin/users", "host": ["{{baseUrl}}"], "path": ["admin", "users"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            }
           }
         },
         {
@@ -118,12 +160,27 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"annotation\": \"Annotation for a great event with comments\",\n  \"category\": {{catId}},\n  \"description\": \"Full description of a great event with comments feature\",\n  \"eventDate\": \"{{eventDate}}\",\n  \"location\": { \"lat\": 55.754167, \"lon\": 37.62 },\n  \"paid\": false,\n  \"participantLimit\": 0,\n  \"requestModeration\": false,\n  \"title\": \"Great Event\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/users/{{authorId}}/events", "host": ["{{baseUrl}}"], "path": ["users", "{{authorId}}", "events"] }
+            "url": {
+              "raw": "{{baseUrl}}/users/{{authorId}}/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{authorId}}",
+                "events"
+              ]
+            }
           }
         },
         {
@@ -142,12 +199,27 @@
           ],
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"stateAction\": \"PUBLISH_EVENT\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/admin/events/{{eventId}}", "host": ["{{baseUrl}}"], "path": ["admin", "events", "{{eventId}}"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/events/{{eventId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "events",
+                "{{eventId}}"
+              ]
+            }
           }
         },
         {
@@ -178,12 +250,27 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"annotation\": \"Annotation for an unpublished pending event\",\n  \"category\": {{catId}},\n  \"description\": \"Full description of an unpublished pending event item\",\n  \"eventDate\": \"{{eventDate2}}\",\n  \"location\": { \"lat\": 55.754167, \"lon\": 37.62 },\n  \"paid\": false,\n  \"participantLimit\": 0,\n  \"requestModeration\": false,\n  \"title\": \"Pending Event\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/users/{{authorId}}/events", "host": ["{{baseUrl}}"], "path": ["users", "{{authorId}}", "events"] }
+            "url": {
+              "raw": "{{baseUrl}}/users/{{authorId}}/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{authorId}}",
+                "events"
+              ]
+            }
           }
         }
       ]
@@ -211,9 +298,29 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"First comment\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "events", "{{eventId}}", "comments"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"First comment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "events",
+                "{{eventId}}",
+                "comments"
+              ]
+            }
           }
         },
         {
@@ -232,9 +339,29 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Second comment\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "events", "{{eventId}}", "comments"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Second comment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "events",
+                "{{eventId}}",
+                "comments"
+              ]
+            }
           }
         },
         {
@@ -253,9 +380,29 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Third comment\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "events", "{{eventId}}", "comments"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Third comment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "events",
+                "{{eventId}}",
+                "comments"
+              ]
+            }
           }
         },
         {
@@ -277,7 +424,27 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/comments?from=0&size=10", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "comments"], "query": [{ "key": "from", "value": "0" }, { "key": "size", "value": "10" }] }
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/comments?from=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
           }
         },
         {
@@ -298,9 +465,28 @@
           ],
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"First comment (edited)\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/comments/{{commentId1}}", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "comments", "{{commentId1}}"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"First comment (edited)\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/comments/{{commentId1}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "comments",
+                "{{commentId1}}"
+              ]
+            }
           }
         },
         {
@@ -318,9 +504,29 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "events", "{{eventId}}", "comments"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{eventId}}/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "events",
+                "{{eventId}}",
+                "comments"
+              ]
+            }
           }
         },
         {
@@ -338,9 +544,29 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Comment on pending event\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{unpublishedEventId}}/comments", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "events", "{{unpublishedEventId}}", "comments"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Comment on pending event\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/events/{{unpublishedEventId}}/comments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "events",
+                "{{unpublishedEventId}}",
+                "comments"
+              ]
+            }
           }
         },
         {
@@ -358,9 +584,28 @@
           ],
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Trying to edit not my comment\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{authorId}}/comments/{{commentId1}}", "host": ["{{baseUrl}}"], "path": ["users", "{{authorId}}", "comments", "{{commentId1}}"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Trying to edit not my comment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{authorId}}/comments/{{commentId1}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{authorId}}",
+                "comments",
+                "{{commentId1}}"
+              ]
+            }
           }
         }
       ]
@@ -387,7 +632,30 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments?status=PENDING&from=0&size=50", "host": ["{{baseUrl}}"], "path": ["admin", "comments"], "query": [{ "key": "status", "value": "PENDING" }, { "key": "from", "value": "0" }, { "key": "size", "value": "50" }] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments?status=PENDING&from=0&size=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                },
+                {
+                  "key": "from",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
           }
         },
         {
@@ -407,7 +675,18 @@
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments/{{commentId1}}/publish", "host": ["{{baseUrl}}"], "path": ["admin", "comments", "{{commentId1}}", "publish"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments/{{commentId1}}/publish",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments",
+                "{{commentId1}}",
+                "publish"
+              ]
+            }
           }
         },
         {
@@ -427,7 +706,18 @@
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments/{{commentId2}}/reject", "host": ["{{baseUrl}}"], "path": ["admin", "comments", "{{commentId2}}", "reject"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments/{{commentId2}}/reject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments",
+                "{{commentId2}}",
+                "reject"
+              ]
+            }
           }
         },
         {
@@ -446,7 +736,18 @@
           "request": {
             "method": "PATCH",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments/{{commentId1}}/publish", "host": ["{{baseUrl}}"], "path": ["admin", "comments", "{{commentId1}}", "publish"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments/{{commentId1}}/publish",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments",
+                "{{commentId1}}",
+                "publish"
+              ]
+            }
           }
         },
         {
@@ -468,7 +769,30 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments?status=PUBLISHED&from=0&size=50", "host": ["{{baseUrl}}"], "path": ["admin", "comments"], "query": [{ "key": "status", "value": "PUBLISHED" }, { "key": "from", "value": "0" }, { "key": "size", "value": "50" }] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments?status=PUBLISHED&from=0&size=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PUBLISHED"
+                },
+                {
+                  "key": "from",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
           }
         },
         {
@@ -488,7 +812,26 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments?from=0&size=50", "host": ["{{baseUrl}}"], "path": ["admin", "comments"], "query": [{ "key": "from", "value": "0" }, { "key": "size", "value": "50" }] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments?from=0&size=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "50"
+                }
+              ]
+            }
           }
         },
         {
@@ -507,7 +850,22 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments?status=WRONG_STATUS", "host": ["{{baseUrl}}"], "path": ["admin", "comments"], "query": [{ "key": "status", "value": "WRONG_STATUS" }] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments?status=WRONG_STATUS",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "WRONG_STATUS"
+                }
+              ]
+            }
           }
         },
         {
@@ -526,7 +884,17 @@
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments/{{commentId3}}", "host": ["{{baseUrl}}"], "path": ["admin", "comments", "{{commentId3}}"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments/{{commentId3}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments",
+                "{{commentId3}}"
+              ]
+            }
           }
         },
         {
@@ -545,7 +913,17 @@
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/admin/comments/999999", "host": ["{{baseUrl}}"], "path": ["admin", "comments", "999999"] }
+            "url": {
+              "raw": "{{baseUrl}}/admin/comments/999999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "comments",
+                "999999"
+              ]
+            }
           }
         }
       ]
@@ -576,7 +954,27 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/events/{{eventId}}/comments?from=0&size=10", "host": ["{{baseUrl}}"], "path": ["events", "{{eventId}}", "comments"], "query": [{ "key": "from", "value": "0" }, { "key": "size", "value": "10" }] }
+            "url": {
+              "raw": "{{baseUrl}}/events/{{eventId}}/comments?from=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
           }
         },
         {
@@ -598,7 +996,18 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/events/{{eventId}}/comments/{{commentId1}}", "host": ["{{baseUrl}}"], "path": ["events", "{{eventId}}", "comments", "{{commentId1}}"] }
+            "url": {
+              "raw": "{{baseUrl}}/events/{{eventId}}/comments/{{commentId1}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}",
+                "comments",
+                "{{commentId1}}"
+              ]
+            }
           }
         },
         {
@@ -617,7 +1026,18 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/events/{{eventId}}/comments/{{commentId2}}", "host": ["{{baseUrl}}"], "path": ["events", "{{eventId}}", "comments", "{{commentId2}}"] }
+            "url": {
+              "raw": "{{baseUrl}}/events/{{eventId}}/comments/{{commentId2}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}",
+                "comments",
+                "{{commentId2}}"
+              ]
+            }
           }
         }
       ]
@@ -640,9 +1060,28 @@
           ],
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Trying to edit a published comment\"\n}" },
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/comments/{{commentId1}}", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "comments", "{{commentId1}}"] }
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Trying to edit a published comment\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/comments/{{commentId1}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "comments",
+                "{{commentId1}}"
+              ]
+            }
           }
         },
         {
@@ -661,7 +1100,18 @@
           "request": {
             "method": "DELETE",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/users/{{commenterId}}/comments/{{commentId1}}", "host": ["{{baseUrl}}"], "path": ["users", "{{commenterId}}", "comments", "{{commentId1}}"] }
+            "url": {
+              "raw": "{{baseUrl}}/users/{{commenterId}}/comments/{{commentId1}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{commenterId}}",
+                "comments",
+                "{{commentId1}}"
+              ]
+            }
           }
         },
         {
@@ -680,7 +1130,18 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{baseUrl}}/events/{{eventId}}/comments/{{commentId1}}", "host": ["{{baseUrl}}"], "path": ["events", "{{eventId}}", "comments", "{{commentId1}}"] }
+            "url": {
+              "raw": "{{baseUrl}}/events/{{eventId}}/comments/{{commentId1}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}",
+                "comments",
+                "{{commentId1}}"
+              ]
+            }
           }
         }
       ]
