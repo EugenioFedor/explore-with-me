@@ -12,16 +12,17 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventShortDto {
+public class CommentDto {
     private Long id;
-    private String annotation;
-    private CategoryDto category;
-    private Long confirmedRequests;
+    private String text;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime eventDate;
-    private UserShortDto initiator;
-    private Boolean paid;
-    private String title;
-    private Long views;
-    private Long comments;
+    private LocalDateTime created;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime updated;
+
+    private String status;
+    private Long eventId;
+    private UserShortDto author;
 }
