@@ -7,10 +7,10 @@ services:
       - "8761:8761"
     healthcheck:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8761/actuator/health || exit 1" ]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+      interval: 1s
+      timeout: 2s
+      retries: 30
+      start_period: 0s
 
   config-server:
     build:
@@ -28,10 +28,10 @@ services:
           "CMD-SHELL",
           "wget -qO- --header='Accept: application/json' http://discovery-server:8761/eureka/apps/CONFIG-SERVER | grep -q '\"status\":\"UP\"' || exit 1"
         ]
-      interval: 5s
-      timeout: 5s
-      retries: 12
-      start_period: 10s
+      interval: 1s
+      timeout: 2s
+      retries: 30
+      start_period: 0s
 
   gateway-server:
     build:
