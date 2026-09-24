@@ -30,8 +30,8 @@ services:
         ]
       interval: 1s
       timeout: 2s
-      retries: 30
-      start_period: 0s
+      retries: 60
+      start_period: 10s
 
   gateway-server:
     build:
