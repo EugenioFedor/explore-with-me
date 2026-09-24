@@ -4,13 +4,12 @@ WORKDIR /app
 
 COPY . .
 
-RUN mvn -pl stats-service/stats-server -am package -DskipTests
-
+RUN mvn -pl infra/config-server -am package -DskipTests
 
 FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY --from=build /app/stats-service/stats-server/target/*.jar app.jar
+COPY --from=build /app/infra/config-server/target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
