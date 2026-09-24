@@ -9,8 +9,8 @@ services:
       test: [ "CMD-SHELL", "wget -qO- http://localhost:8761/actuator/health || exit 1" ]
       interval: 1s
       timeout: 2s
-      retries: 30
-      start_period: 0s
+      retries: 60
+      start_period: 10s
 
   config-server:
     build:
@@ -40,8 +40,6 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      discovery-server:
-        condition: service_healthy
       config-server:
         condition: service_healthy
     environment:
