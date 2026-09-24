@@ -118,7 +118,7 @@ services:
       ewm-db:
         condition: service_healthy
       stats-server:
-        condition: service_started
+        condition: service_healthy
       discovery-server:
         condition: service_healthy
       config-server:
