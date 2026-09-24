@@ -12,6 +12,4 @@ WORKDIR /app
 
 COPY --from=build /app/infra/config-server/target/*.jar app.jar
 
-COPY --from=build /app/infra/config ./infra/config
-
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
