@@ -44,6 +44,11 @@ services:
         condition: service_healthy
     environment:
       EUREKA_URL: http://discovery-server:8761/eureka/
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1" ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   stats-server:
     build:
